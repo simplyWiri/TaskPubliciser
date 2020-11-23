@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net472</TargetFrameworks>
+        <RootNamespace>TaskPubliciser</RootNamespace>
+        <AssemblyName>TaskPubliciser</AssemblyName>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <IsPackable>true</IsPackable>
+        <IsTestProject>false</IsTestProject>
+        <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+        <Platforms>AnyCPU</Platforms>
+        <developmentDependency>true</developmentDependency>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>Wiri</Authors>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dnlib" Version="3.3.2"/>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="build\**\*" PackagePath="build\" />
+  </ItemGroup>
+
+</Project>
