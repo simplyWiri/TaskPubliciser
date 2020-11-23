@@ -17,21 +17,23 @@ namespace TaskPubliciser
         {
             if (!ValidityChecks()) return false;
 
+            var asmName = Path.GetFileNameWithoutExtension(TargetAssemblyPath);
+
             // Get the hash for the file
             var hash = GetHash();
 
             // Get the possibly not existing hash for the previous iteration
-            var oldHash = GetExistingHash(Path.GetFileNameWithoutExtension(TargetAssemblyPath), out var hashPath);
+            var oldHash = GetExistingHash(asmName, out var hashPath);
 
-            // No work to do, the file has not been changed
-            if (hash == oldHash)
+            // No work to do, the file has not been changed, and the dll existS
+            if (hash == oldHash && !File.Exists($"{OutputPath}{asmName}{Suffix}.dll"))
             {
                 if(Logging) Log.LogMessage("Hashes are equal, exiting");
                 return true;
             }
 
             // Publicise our Assembly
-            PubliciseAssembly();
+            PubliciseAssembly(asmName);
 
             // Update our hash
             File.WriteAllText(hashPath, hash);
@@ -48,9 +50,9 @@ namespace TaskPubliciser
             return lastWriteTime.ToBinary().ToString();
         }
 
-        public string GetExistingHash(string fileName, out string hashPath)
+        public string GetExistingHash(string asmName, out string hashPath)
         {
-            hashPath = Path.Combine(OutputPath, $"{fileName}_hash.hash");
+            hashPath = Path.Combine(OutputPath, $"{asmName}_hash.hash");
 
             return File.Exists(hashPath) ? File.ReadAllText(hashPath) : null;
         }
@@ -67,7 +69,7 @@ namespace TaskPubliciser
         }
 
         // https://gist.github.com/Zetrith/d86b1d84e993c8117983c09f1a5dcdcd
-        public void PubliciseAssembly()
+        public void PubliciseAssembly(string asmName)
         {
             ModuleDef assembly = ModuleDefMD.Load(TargetAssemblyPath);
 
@@ -97,7 +99,7 @@ namespace TaskPubliciser
                 }
             }
 
-            assembly.Write($"{OutputPath}{Suffix}.dll");
+            assembly.Write($"{OutputPath}{asmName}{Suffix}.dll");
         }
     }
 }
