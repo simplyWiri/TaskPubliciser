@@ -13,12 +13,13 @@
         <developmentDependency>true</developmentDependency>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>Wiri</Authors>
+        <Version>1.0.2</Version>
     </PropertyGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.548" ExcludeAssets="runtime" />
-    <PackageReference Include="dnlib" Version="3.3.2" PrivateAssets="All" />
+	  <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.548" ExcludeAssets="runtime" />
+	  <PackageReference Include="dnlib" Version="3.3.2" PrivateAssets="All" />
     <PackageReference Include="ILRepack.Lib.MSBuild" Version="2.1.14" PrivateAssets="all" />
   </ItemGroup>
 

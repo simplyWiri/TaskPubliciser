@@ -26,9 +26,9 @@ namespace TaskPubliciser
             var oldHash = GetExistingHash(asmName, out var hashPath);
 
             // No work to do, the file has not been changed, and the dll existS
-            if (hash == oldHash && !File.Exists($"{OutputPath}{asmName}{Suffix}.dll"))
+            if (hash == oldHash || !File.Exists($"{OutputPath}{asmName}{Suffix}.dll"))
             {
-                if(Logging) Log.LogMessage("Hashes are equal, exiting");
+                if(Logging) Log.LogError("[TaskPubliciser] Hashes are equal, exiting");
                 return true;
             }
 
@@ -38,6 +38,8 @@ namespace TaskPubliciser
             // Update our hash
             File.WriteAllText(hashPath, hash);
 
+            if (Logging) Log.LogError($"[TaskPubliciser] Exiting Execution for Target: {TargetAssemblyPath}\nOutput: {OutputPath}\n Suffix: {Suffix}\n Logging {Logging}");
+
             return true;
         }
 
@@ -45,7 +47,7 @@ namespace TaskPubliciser
         {
             var lastWriteTime = File.GetLastWriteTime(TargetAssemblyPath);
 
-            if (Logging) Log.LogMessage($"Retrieving 'Hash': File was last written: {lastWriteTime.ToString()}\nIn binary: {lastWriteTime.ToBinary()}");
+            if (Logging) Log.LogError($"[TaskPubliciser] Retrieving hash: File was last written: {lastWriteTime.ToString()}\nIn binary: {lastWriteTime.ToBinary()}");
             
             return lastWriteTime.ToBinary().ToString();
         }
@@ -54,7 +56,11 @@ namespace TaskPubliciser
         {
             hashPath = Path.Combine(OutputPath, $"{asmName}_hash.hash");
 
-            return File.Exists(hashPath) ? File.ReadAllText(hashPath) : null;
+            var hash = File.Exists(hashPath) ? File.ReadAllText(hashPath) : null;
+
+            if (Logging) Log.LogError($"[TaskPubliciser] Retrieving existing hash: File was last written: {hash}");
+
+            return hash;
         }
 
         public bool ValidityChecks()
@@ -98,6 +104,9 @@ namespace TaskPubliciser
                     field.Attributes |= FieldAttributes.Public;
                 }
             }
+
+
+            if (Logging) Log.LogError($"[TaskPubliciser] Writing to the new publicised assembly");
 
             assembly.Write($"{OutputPath}{asmName}{Suffix}.dll");
         }
