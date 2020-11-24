@@ -26,7 +26,7 @@ namespace TaskPubliciser
             var oldHash = GetExistingHash(asmName, out var hashPath);
 
             // No work to do, the file has not been changed, and the dll existS
-            if (hash == oldHash || !File.Exists($"{OutputPath}{asmName}{Suffix}.dll"))
+            if (hash == oldHash)
             {
                 if(Logging) Log.LogError("[TaskPubliciser] Hashes are equal, exiting");
                 return true;
